@@ -67,7 +67,14 @@ loader = HashtagLoader.new{|status|
     id: status.id,
     text: status.text,
     hashtags: status.hashtags.map(&:text),
-    user: {name: status.user.name, screen_name: status.user.screen_name}
+    urls: status.urls.map(&:expanded_url),
+    user_mentions: status.user_mentions.map(&:screen_name),
+    created_at: status.created_at,
+    user: {
+      name: status.user.name,
+      screen_name: status.user.screen_name,
+      profile_image_url: status.user.profile_image_url
+    }
   }
   if ENV['POST_URL']
     HTTP.post ENV['POST_URL'], json: json
