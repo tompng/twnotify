@@ -23,6 +23,7 @@ class HashtagLoader
     if keywords.empty?
       self.thread = nil
     else
+      p keywords
       self.thread = Thread.new{
         TweetStream::Client.new.track *keywords do |status|
           begin
@@ -55,9 +56,9 @@ end
 
 def get_keywords
   if ENV['KEYWORDS_URL']
-    JSON.parse HTTP.get(ENV['KEYWORDS_URL']).body.to_s
+    JSON.parse open(ENV['KEYWORDS_URL']).read
   else
-    gets.split
+    keywords = gets.split
   end
 end
 
@@ -76,6 +77,7 @@ loader = HashtagLoader.new{|status|
 }
 
 loop{
+  p get_keywords
   loader.track get_keywords
   sleep 10
 }
